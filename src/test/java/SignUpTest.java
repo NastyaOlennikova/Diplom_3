@@ -2,7 +2,6 @@ import com.codeborne.selenide.Configuration;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.example.StellarBurgersPageObject;
 import org.example.TestData;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -14,7 +13,7 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
 import static com.codeborne.selenide.WebDriverRunner.setWebDriver;
 
-public class SignUpSuccessTest {
+public class SignUpTest {
 
     StellarBurgersPageObject mainPage;
     ChromeDriver driver;
@@ -36,7 +35,7 @@ public class SignUpSuccessTest {
     }
 
     @Test
-    public void signUp() {
+    public void signUpSuccess() {
 
         mainPage.accountButton.click();
         mainPage.signupButton.shouldBe(visible);
@@ -47,12 +46,30 @@ public class SignUpSuccessTest {
         mainPage.passwordInputRegistrationForm.setValue(password);
         mainPage.confirmSignUpButton.click();
         $(By.xpath("/html/body/div/div/main/div/form/button[text() = 'Войти']")).shouldBe(visible);
-    }
 
-    @After
-    public void deleteTestData() {
         TestData testData = new TestData();
         testData.loginAndDeleteTestUser(email, password);
     }
+
+    @Test
+    public void signUpFail() {
+
+        mainPage.accountButton.click();
+        mainPage.signupButton.shouldBe(visible);
+        mainPage.signupButton.click();
+        $(By.xpath("//div/main/div/h2[text()='Регистрация']")).shouldBe(visible);
+        mainPage.nameInputRegistrationForm.setValue(name);
+        mainPage.emailInputRegistrationForm.setValue(email);
+        mainPage.passwordInputRegistrationForm.setValue(RandomStringUtils.randomAlphabetic(4));
+        mainPage.confirmSignUpButton.click();
+        $(By.xpath("//div/form/fieldset[3]/div/p[text() = 'Некорректный пароль']")).shouldBe(visible);
+
+    }
+
+/*    @After
+    public void deleteTestData() {
+        TestData testData = new TestData();
+        testData.loginAndDeleteTestUser(email, password);
+    }*/
 
 }

@@ -31,4 +31,5 @@ public class TestData {
                 .delete("https://stellarburgers.nomoreparties.site/api/auth/user")
                 .then().assertThat().statusCode(202);
     }
+
 }
