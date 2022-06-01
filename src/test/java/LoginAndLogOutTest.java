@@ -2,15 +2,15 @@ import com.codeborne.selenide.Configuration;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.example.StellarBurgersPageObject;
 import org.example.TestData;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.chrome.ChromeDriver;
 
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.*;
 
-public class LoginTest {
+public class LoginAndLogOutTest {
 
     StellarBurgersPageObject mainPage;
     String name;
@@ -46,9 +46,6 @@ public class LoginTest {
         mainPage.passwordInputLoginForm.setValue(password);
         mainPage.signInButtonLoginForm.click();
         mainPage.makeOrderButton.shouldBe(visible);
-
-        TestData testData = new TestData();
-        testData.loginAndDeleteTestUser(email, password);
     }
 
     @Test
@@ -70,9 +67,6 @@ public class LoginTest {
         mainPage.passwordInputLoginForm.setValue(password);
         mainPage.signInButtonLoginForm.click();
         mainPage.makeOrderButton.shouldBe(visible);
-
-        TestData testData = new TestData();
-        testData.loginAndDeleteTestUser(email, password);
     }
 
     @Test
@@ -97,9 +91,40 @@ public class LoginTest {
         mainPage.passwordInputLoginForm.setValue(password);
         mainPage.signInButtonLoginForm.click();
         mainPage.makeOrderButton.shouldBe(visible);
+    }
 
+    @Test
+    public void logOutTest() {
+        mainPage.accountButton.click();
+        mainPage.signupButton.shouldBe(visible);
+        mainPage.signupButton.click();
+        $(By.xpath("//div/main/div/h2[text()='Регистрация']")).shouldBe(visible);
+        mainPage.nameInputRegistrationForm.setValue(name);
+        mainPage.emailInputRegistrationForm.setValue(email);
+        mainPage.passwordInputRegistrationForm.setValue(password);
+        mainPage.confirmSignUpButton.click();
+        $(By.xpath("/html/body/div/div/main/div/form/button[text() = 'Войти']")).shouldBe(visible);
+
+        refresh();
+        mainPage.accountButton.click();
+        $(By.xpath("//div/main/div/h2[text()='Вход']")).shouldBe(visible);
+        mainPage.emailInputLoginForm.setValue(email);
+        mainPage.passwordInputLoginForm.setValue(password);
+        mainPage.signInButtonLoginForm.click();
+        mainPage.makeOrderButton.shouldBe(visible);
+
+        mainPage.accountButton.click();
+        $(By.xpath("//div/nav/p[text()='В этом разделе вы можете изменить свои персональные данные']")).shouldBe(visible);
+        mainPage.logOutButton.click();
+        $(By.xpath("//div/main/div/h2[text()='Вход']")).shouldBe(visible);
+
+    }
+
+    @After
+    public void deleteTestData() {
         TestData testData = new TestData();
         testData.loginAndDeleteTestUser(email, password);
+
     }
 
 

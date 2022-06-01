@@ -22,7 +22,6 @@ public class TestData {
                         .when()
                         .post("https://stellarburgers.nomoreparties.site/api/auth/login");
         response.then().assertThat().statusCode(200).and().body("success", equalTo(true));
-        String refreshToken = response.path("refreshToken");
         String accessToken = response.path("accessToken");
 
         given()
