@@ -7,11 +7,9 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
-import static com.codeborne.selenide.WebDriverRunner.setWebDriver;
 
 public class SignUpTest {
 
@@ -23,9 +21,6 @@ public class SignUpTest {
 
     @Before
     public void setUp() {
-        /*System.setProperty("webdriver.chrome.driver", "src/main/resources/yandexdriver");
-        driver = new ChromeDriver();
-        setWebDriver(driver);*/
         Configuration.startMaximized = true;//опционально
         mainPage = open("https://stellarburgers.nomoreparties.site/",
                 StellarBurgersPageObject.class);
@@ -36,7 +31,6 @@ public class SignUpTest {
 
     @Test
     public void signUpSuccess() {
-
         mainPage.accountButton.click();
         mainPage.signupButton.shouldBe(visible);
         mainPage.signupButton.click();
@@ -53,7 +47,6 @@ public class SignUpTest {
 
     @Test
     public void signUpFail() {
-
         mainPage.accountButton.click();
         mainPage.signupButton.shouldBe(visible);
         mainPage.signupButton.click();
@@ -63,13 +56,5 @@ public class SignUpTest {
         mainPage.passwordInputRegistrationForm.setValue(RandomStringUtils.randomAlphabetic(4));
         mainPage.confirmSignUpButton.click();
         $(By.xpath("//div/form/fieldset[3]/div/p[text() = 'Некорректный пароль']")).shouldBe(visible);
-
     }
-
-/*    @After
-    public void deleteTestData() {
-        TestData testData = new TestData();
-        testData.loginAndDeleteTestUser(email, password);
-    }*/
-
 }

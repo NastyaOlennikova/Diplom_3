@@ -1,4 +1,5 @@
 import com.codeborne.selenide.Configuration;
+import io.qameta.allure.junit4.DisplayName;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.example.StellarBurgersPageObject;
 import org.example.TestData;
@@ -26,6 +27,7 @@ public class SiteNavigationTest {
     }
 
     @Test
+    @DisplayName("Go to 'Личный кабинет' button as an authorized user")
     public void goToAccountAuthorized() {
         mainPage.accountButton.click();
         mainPage.signupButton.shouldBe(visible);
@@ -53,6 +55,7 @@ public class SiteNavigationTest {
     }
 
     @Test
+    @DisplayName("Click on logo from personal account")
     public void goToStellarBurgerLogoAuthorized() {
         mainPage.accountButton.click();
         mainPage.signupButton.shouldBe(visible);
@@ -82,6 +85,7 @@ public class SiteNavigationTest {
     }
 
     @Test
+    @DisplayName("Go to constructor page as an authorized user")
     public void goToConstructorFromAccount() {
         mainPage.accountButton.click();
         mainPage.signupButton.shouldBe(visible);
@@ -110,6 +114,7 @@ public class SiteNavigationTest {
         testData.loginAndDeleteTestUser(email, password);
     }
     @Test
+    @DisplayName("Go to bun section")
     public void goToBunsSection() {
         mainPage.saucesSectionButton.click();
         $(By.xpath("//section[1]/div[2]/h2[text() = 'Соусы']")).shouldBe(visible);
@@ -118,12 +123,14 @@ public class SiteNavigationTest {
     }
 
     @Test
+    @DisplayName("Go to sauces section")
     public void goToSaucesSection() {
         mainPage.saucesSectionButton.click();
         $(By.xpath("//section[1]/div[2]/h2[text() = 'Соусы']")).shouldBe(visible);
     }
 
     @Test
+    @DisplayName("Go to filling section")
     public void goToFillingsSection() {
         mainPage.fillingsSectionButton.click();
         $(By.xpath("//section[1]/div[2]/h2[text() = 'Начинки']")).shouldBe(visible);

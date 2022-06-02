@@ -1,4 +1,5 @@
 import com.codeborne.selenide.Configuration;
+import io.qameta.allure.junit4.DisplayName;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.example.StellarBurgersPageObject;
 import org.example.TestData;
@@ -28,6 +29,7 @@ public class LoginAndLogOutTest {
     }
 
     @Test
+    @DisplayName("User login by main page 'Войти в аккаунт' button")
     public void loginMainPageButton() {
         mainPage.accountButton.click();
         mainPage.signupButton.shouldBe(visible);
@@ -37,7 +39,7 @@ public class LoginAndLogOutTest {
         mainPage.emailInputRegistrationForm.setValue(email);
         mainPage.passwordInputRegistrationForm.setValue(password);
         mainPage.confirmSignUpButton.click();
-        $(By.xpath("/html/body/div/div/main/div/form/button[text() = 'Войти']")).shouldBe(visible);
+        mainPage.signInButtonLoginForm.shouldBe(visible);
 
         open("https://stellarburgers.nomoreparties.site/");
         mainPage.signInButtonMainPage.click();
@@ -49,6 +51,8 @@ public class LoginAndLogOutTest {
     }
 
     @Test
+
+    @DisplayName("User login by header 'Личный кабинет' button")
     public void loginHeaderAccountButton() {
         mainPage.accountButton.click();
         mainPage.signupButton.shouldBe(visible);
@@ -70,6 +74,7 @@ public class LoginAndLogOutTest {
     }
 
     @Test
+    @DisplayName("User login by 'Войти' button on restore password page")
     public void loginRestorePasswordFormButton() {
         mainPage.accountButton.click();
         mainPage.signupButton.shouldBe(visible);
@@ -94,6 +99,7 @@ public class LoginAndLogOutTest {
     }
 
     @Test
+    @DisplayName("Log out user")
     public void logOutTest() {
         mainPage.accountButton.click();
         mainPage.signupButton.shouldBe(visible);
