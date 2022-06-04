@@ -1,8 +1,10 @@
+/*
 import com.codeborne.selenide.Configuration;
 import io.qameta.allure.junit4.DisplayName;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.example.StellarBurgersPageObject;
-import org.example.TestData;
+import org.example.pageobject.MainPageObject;
+import org.example.testdata.TestData;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -11,7 +13,7 @@ import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.*;
 
 public class SiteNavigationTest {
-    StellarBurgersPageObject mainPage;
+    MainPageObject mainPage;
     String name;
     String email;
     String password;
@@ -138,3 +140,4 @@ public class SiteNavigationTest {
 
 
 }
+*/

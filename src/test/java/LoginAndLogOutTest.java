@@ -1,8 +1,9 @@
+/*
 import com.codeborne.selenide.Configuration;
 import io.qameta.allure.junit4.DisplayName;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.example.StellarBurgersPageObject;
-import org.example.TestData;
+import org.example.pageobject.*
+import org.example.testdata.TestData;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +14,9 @@ import static com.codeborne.selenide.Selenide.*;
 
 public class LoginAndLogOutTest {
 
-    StellarBurgersPageObject mainPage;
+    MainPageObject mainPage;
+    LoginPageObject loginPage;
+    RegisterPageObject registerPage;
     String name;
     String email;
     String password;
@@ -22,7 +25,11 @@ public class LoginAndLogOutTest {
     public void setUp() {
         Configuration.startMaximized = true;//опционально
         mainPage = open("https://stellarburgers.nomoreparties.site/",
-                StellarBurgersPageObject.class);
+                MainPageObject.class);
+        loginPage = open("https://stellarburgers.nomoreparties.site/login",
+                LoginPageObject.class);
+        registerPage = open("https://stellarburgers.nomoreparties.site/register",
+                RegisterPageObject.class);
         name = RandomStringUtils.randomAlphabetic(10);
         email = RandomStringUtils.randomAlphabetic(5) + "@" + RandomStringUtils.randomAlphabetic(5) + ".ru";;
         password = RandomStringUtils.randomAlphabetic(6);
@@ -32,14 +39,16 @@ public class LoginAndLogOutTest {
     @DisplayName("User login by main page 'Войти в аккаунт' button")
     public void loginMainPageButton() {
         mainPage.accountButton.click();
-        mainPage.signupButton.shouldBe(visible);
-        mainPage.signupButton.click();
-        $(By.xpath("//div/main/div/h2[text()='Регистрация']")).shouldBe(visible);
+        loginPage.signUpButtonIsVisible();
+        loginPage.clickSignUpButton();
+        registerPage.registerHeadingIsVisible();
         mainPage.nameInputRegistrationForm.setValue(name);
         mainPage.emailInputRegistrationForm.setValue(email);
         mainPage.passwordInputRegistrationForm.setValue(password);
         mainPage.confirmSignUpButton.click();
         mainPage.signInButtonLoginForm.shouldBe(visible);
+
+
 
         open("https://stellarburgers.nomoreparties.site/");
         mainPage.signInButtonMainPage.click();
@@ -138,3 +147,4 @@ public class LoginAndLogOutTest {
 
 
 }
+*/
