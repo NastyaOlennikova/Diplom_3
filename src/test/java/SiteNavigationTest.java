@@ -1,116 +1,66 @@
-/*
 import com.codeborne.selenide.Configuration;
 import io.qameta.allure.junit4.DisplayName;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.example.StellarBurgersPageObject;
+import org.example.pageobject.LoginPageObject;
 import org.example.pageobject.MainPageObject;
+import org.example.pageobject.RegisterPageObject;
 import org.example.testdata.TestData;
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.By;
 
-import static com.codeborne.selenide.Condition.visible;
-import static com.codeborne.selenide.Selenide.*;
+import static com.codeborne.selenide.Selenide.open;
 
 public class SiteNavigationTest {
     MainPageObject mainPage;
+    LoginPageObject loginPage = open("https://stellarburgers.nomoreparties.site/login",
+                                   LoginPageObject.class);
+    RegisterPageObject registerPage = open("https://stellarburgers.nomoreparties.site/register",
+                                         RegisterPageObject.class);
     String name;
     String email;
     String password;
 
     @Before
     public void setUp() {
+        /*если хотим прогнать тесты в firefox необходимо добавить строку: System.setProperty("selenide.browser", "firefox");
+        для яндекс браузера (его драйвер сохранен локально), необходимо прописать:
+        System.setProperty("webdriver.chrome.driver", "src/main/resources/yandexdriver");
+                    driver = new ChromeDriver();
+                    setWebDriver(driver);*/
         Configuration.startMaximized = true;//опционально
         mainPage = open("https://stellarburgers.nomoreparties.site/",
-                StellarBurgersPageObject.class);
+                MainPageObject.class);
         name = RandomStringUtils.randomAlphabetic(10);
-        email = RandomStringUtils.randomAlphabetic(5) + "@" + RandomStringUtils.randomAlphabetic(5) + ".ru";;
+        email = RandomStringUtils.randomAlphabetic(5) + "@" + RandomStringUtils.randomAlphabetic(5) + ".ru";
         password = RandomStringUtils.randomAlphabetic(6);
     }
-
     @Test
     @DisplayName("Go to 'Личный кабинет' button as an authorized user")
     public void goToAccountAuthorized() {
-        mainPage.accountButton.click();
-        mainPage.signupButton.shouldBe(visible);
-        mainPage.signupButton.click();
-        $(By.xpath("//div/main/div/h2[text()='Регистрация']")).shouldBe(visible);
-        mainPage.nameInputRegistrationForm.setValue(name);
-        mainPage.emailInputRegistrationForm.setValue(email);
-        mainPage.passwordInputRegistrationForm.setValue(password);
-        mainPage.confirmSignUpButton.click();
-        $(By.xpath("/html/body/div/div/main/div/form/button[text() = 'Войти']")).shouldBe(visible);
-
-        refresh();
-        mainPage.accountButton.click();
-        $(By.xpath("//div/main/div/h2[text()='Вход']")).shouldBe(visible);
-        mainPage.emailInputLoginForm.setValue(email);
-        mainPage.passwordInputLoginForm.setValue(password);
-        mainPage.signInButtonLoginForm.click();
-        mainPage.makeOrderButton.shouldBe(visible);
-
-        mainPage.accountButton.click();
-        $(By.xpath("//div/nav/p[text()='В этом разделе вы можете изменить свои персональные данные']")).shouldBe(visible);
+        registerPage.registerLoginAndGoToPersonalAccount(name, email, password);
 
         TestData testData = new TestData();
         testData.loginAndDeleteTestUser(email, password);
     }
-
     @Test
     @DisplayName("Click on logo from personal account")
     public void goToStellarBurgerLogoAuthorized() {
-        mainPage.accountButton.click();
-        mainPage.signupButton.shouldBe(visible);
-        mainPage.signupButton.click();
-        $(By.xpath("//div/main/div/h2[text()='Регистрация']")).shouldBe(visible);
-        mainPage.nameInputRegistrationForm.setValue(name);
-        mainPage.emailInputRegistrationForm.setValue(email);
-        mainPage.passwordInputRegistrationForm.setValue(password);
-        mainPage.confirmSignUpButton.click();
-        $(By.xpath("/html/body/div/div/main/div/form/button[text() = 'Войти']")).shouldBe(visible);
-
-        refresh();
-        mainPage.accountButton.click();
-        $(By.xpath("//div/main/div/h2[text()='Вход']")).shouldBe(visible);
-        mainPage.emailInputLoginForm.setValue(email);
-        mainPage.passwordInputLoginForm.setValue(password);
-        mainPage.signInButtonLoginForm.click();
-        mainPage.makeOrderButton.shouldBe(visible);
-
-        mainPage.accountButton.click();
-        $(By.xpath("//div/nav/p[text()='В этом разделе вы можете изменить свои персональные данные']")).shouldBe(visible);
-        mainPage.stellarBurgersLogo.click();
-        mainPage.makeOrderButton.shouldBe(visible);
+        registerPage.registerLoginAndGoToPersonalAccount(name, email, password);
+        mainPage.clickLogo();
+        mainPage.makeOrderButtonIsVisible();
 
         TestData testData = new TestData();
         testData.loginAndDeleteTestUser(email, password);
     }
-
     @Test
     @DisplayName("Go to constructor page as an authorized user")
     public void goToConstructorFromAccount() {
-        mainPage.accountButton.click();
-        mainPage.signupButton.shouldBe(visible);
-        mainPage.signupButton.click();
-        $(By.xpath("//div/main/div/h2[text()='Регистрация']")).shouldBe(visible);
-        mainPage.nameInputRegistrationForm.setValue(name);
-        mainPage.emailInputRegistrationForm.setValue(email);
-        mainPage.passwordInputRegistrationForm.setValue(password);
-        mainPage.confirmSignUpButton.click();
-        $(By.xpath("/html/body/div/div/main/div/form/button[text() = 'Войти']")).shouldBe(visible);
-
-        refresh();
-        mainPage.accountButton.click();
-        $(By.xpath("//div/main/div/h2[text()='Вход']")).shouldBe(visible);
-        mainPage.emailInputLoginForm.setValue(email);
-        mainPage.passwordInputLoginForm.setValue(password);
-        mainPage.signInButtonLoginForm.click();
-        mainPage.makeOrderButton.shouldBe(visible);
-
-        mainPage.accountButton.click();
-        $(By.xpath("//div/nav/p[text()='В этом разделе вы можете изменить свои персональные данные']")).shouldBe(visible);
-        mainPage.constructorHeaderButton.click();
-        $(By.xpath("/html/body/div/div/main/section[1]/h1[text()='Соберите бургер']")).shouldBe(visible);
+        registerPage.signUpUser(name, email, password);
+        loginPage.signInHeadingIsVisible();
+        loginPage.loginUser(email, password);
+        mainPage.makeOrderButtonIsVisible();
+        mainPage.goToConstructor();
+        mainPage.constructBurgerHeadingIsVisible();
 
         TestData testData = new TestData();
         testData.loginAndDeleteTestUser(email, password);
@@ -118,26 +68,21 @@ public class SiteNavigationTest {
     @Test
     @DisplayName("Go to bun section")
     public void goToBunsSection() {
-        mainPage.saucesSectionButton.click();
-        $(By.xpath("//section[1]/div[2]/h2[text() = 'Соусы']")).shouldBe(visible);
-        mainPage.bunsSectionButton.click();
-        $(By.xpath("//section[1]/div[2]/h2[text() = 'Булки']")).shouldBe(visible);
+        mainPage.goToSaucesSection();
+        mainPage.saucesHeadingIsVisible();
+        mainPage.goToBunsSection();
+        mainPage.bunsHeadingIsVisible();
     }
-
     @Test
     @DisplayName("Go to sauces section")
     public void goToSaucesSection() {
-        mainPage.saucesSectionButton.click();
-        $(By.xpath("//section[1]/div[2]/h2[text() = 'Соусы']")).shouldBe(visible);
+        mainPage.goToSaucesSection();
+        mainPage.saucesHeadingIsVisible();
     }
-
     @Test
     @DisplayName("Go to filling section")
     public void goToFillingsSection() {
-        mainPage.fillingsSectionButton.click();
-        $(By.xpath("//section[1]/div[2]/h2[text() = 'Начинки']")).shouldBe(visible);
+        mainPage.goToFillingsSection();
+        mainPage.fillingsHeadingIsVisible();
     }
-
-
 }
-*/

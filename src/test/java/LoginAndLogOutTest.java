@@ -1,8 +1,7 @@
-/*
 import com.codeborne.selenide.Configuration;
 import io.qameta.allure.junit4.DisplayName;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.example.pageobject.*
+import org.example.pageobject.*;
 import org.example.testdata.TestData;
 import org.junit.After;
 import org.junit.Before;
@@ -17,12 +16,19 @@ public class LoginAndLogOutTest {
     MainPageObject mainPage;
     LoginPageObject loginPage;
     RegisterPageObject registerPage;
+    ForgotPasswordPageObject forgotPasswordPage;
+    AccountPageObject accountPage;
     String name;
     String email;
     String password;
 
     @Before
     public void setUp() {
+        /*если хотим прогнать тесты в firefox необходимо добавить строку: System.setProperty("selenide.browser", "firefox");
+        для яндекс браузера (его драйвер сохранен локально), необходимо прописать:
+        System.setProperty("webdriver.chrome.driver", "src/main/resources/yandexdriver");
+                    driver = new ChromeDriver();
+                    setWebDriver(driver);*/
         Configuration.startMaximized = true;//опционально
         mainPage = open("https://stellarburgers.nomoreparties.site/",
                 MainPageObject.class);
@@ -30,121 +36,64 @@ public class LoginAndLogOutTest {
                 LoginPageObject.class);
         registerPage = open("https://stellarburgers.nomoreparties.site/register",
                 RegisterPageObject.class);
+        forgotPasswordPage = open("https://stellarburgers.nomoreparties.site/forgot-password",
+                ForgotPasswordPageObject.class);
+        accountPage = open("https://stellarburgers.nomoreparties.site/account/profile", AccountPageObject.class);
         name = RandomStringUtils.randomAlphabetic(10);
-        email = RandomStringUtils.randomAlphabetic(5) + "@" + RandomStringUtils.randomAlphabetic(5) + ".ru";;
+        email = RandomStringUtils.randomAlphabetic(5) + "@" + RandomStringUtils.randomAlphabetic(5) + ".ru";
         password = RandomStringUtils.randomAlphabetic(6);
     }
 
     @Test
     @DisplayName("User login by main page 'Войти в аккаунт' button")
     public void loginMainPageButton() {
-        mainPage.accountButton.click();
-        loginPage.signUpButtonIsVisible();
-        loginPage.clickSignUpButton();
-        registerPage.registerHeadingIsVisible();
-        mainPage.nameInputRegistrationForm.setValue(name);
-        mainPage.emailInputRegistrationForm.setValue(email);
-        mainPage.passwordInputRegistrationForm.setValue(password);
-        mainPage.confirmSignUpButton.click();
-        mainPage.signInButtonLoginForm.shouldBe(visible);
-
-
-
-        open("https://stellarburgers.nomoreparties.site/");
-        mainPage.signInButtonMainPage.click();
-        $(By.xpath("//div/main/div/h2[text()='Вход']")).shouldBe(visible);
-        mainPage.emailInputLoginForm.setValue(email);
-        mainPage.passwordInputLoginForm.setValue(password);
-        mainPage.signInButtonLoginForm.click();
-        mainPage.makeOrderButton.shouldBe(visible);
+        registerPage.signUpUser(name, email, password);
+        loginPage.signInHeadingIsVisible();
+        mainPage.refreshMainPage();
+        mainPage.clickSignInButton();
+        loginPage.loginUser(email, password);
+        mainPage.makeOrderButtonIsVisible();
     }
 
     @Test
-
     @DisplayName("User login by header 'Личный кабинет' button")
     public void loginHeaderAccountButton() {
-        mainPage.accountButton.click();
-        mainPage.signupButton.shouldBe(visible);
-        mainPage.signupButton.click();
-        $(By.xpath("//div/main/div/h2[text()='Регистрация']")).shouldBe(visible);
-        mainPage.nameInputRegistrationForm.setValue(name);
-        mainPage.emailInputRegistrationForm.setValue(email);
-        mainPage.passwordInputRegistrationForm.setValue(password);
-        mainPage.confirmSignUpButton.click();
-        $(By.xpath("/html/body/div/div/main/div/form/button[text() = 'Войти']")).shouldBe(visible);
-
-        refresh();
-        mainPage.accountButton.click();
-        $(By.xpath("//div/main/div/h2[text()='Вход']")).shouldBe(visible);
-        mainPage.emailInputLoginForm.setValue(email);
-        mainPage.passwordInputLoginForm.setValue(password);
-        mainPage.signInButtonLoginForm.click();
-        mainPage.makeOrderButton.shouldBe(visible);
+        registerPage.signUpUser(name, email, password);
+        loginPage.signInHeadingIsVisible();
+        open("https://stellarburgers.nomoreparties.site/");
+        mainPage.goToPersonalAccount();
+        loginPage.loginUser(email, password);
+        mainPage.makeOrderButtonIsVisible();
     }
 
     @Test
     @DisplayName("User login by 'Войти' button on restore password page")
     public void loginRestorePasswordFormButton() {
-        mainPage.accountButton.click();
-        mainPage.signupButton.shouldBe(visible);
-        mainPage.signupButton.click();
-        $(By.xpath("//div/main/div/h2[text()='Регистрация']")).shouldBe(visible);
-        mainPage.nameInputRegistrationForm.setValue(name);
-        mainPage.emailInputRegistrationForm.setValue(email);
-        mainPage.passwordInputRegistrationForm.setValue(password);
-        mainPage.confirmSignUpButton.click();
-        $(By.xpath("/html/body/div/div/main/div/form/button[text() = 'Войти']")).shouldBe(visible);
-
-        refresh();
-        mainPage.accountButton.click();
-        $(By.xpath("//div/main/div/h2[text()='Вход']")).shouldBe(visible);
-        mainPage.restorePasswordButton.click();
-        $(By.xpath("//main/div/h2[text()='Восстановление пароля']")).shouldBe(visible);
-        mainPage.signInButtonRestorePasswordForm.click();
-        mainPage.emailInputLoginForm.setValue(email);
-        mainPage.passwordInputLoginForm.setValue(password);
-        mainPage.signInButtonLoginForm.click();
+        registerPage.signUpUser(name, email, password);
+        loginPage.signInHeadingIsVisible();
+        mainPage.goToPersonalAccount();
+        loginPage.clickRestorePasswordButton();
+        forgotPasswordPage.restorePasswordHeadingIsVisible();
+        forgotPasswordPage.clickSignInButton();
+        loginPage.loginUser(email, password);
         mainPage.makeOrderButton.shouldBe(visible);
     }
 
     @Test
     @DisplayName("Log out user")
     public void logOutTest() {
-        mainPage.accountButton.click();
-        mainPage.signupButton.shouldBe(visible);
-        mainPage.signupButton.click();
-        $(By.xpath("//div/main/div/h2[text()='Регистрация']")).shouldBe(visible);
-        mainPage.nameInputRegistrationForm.setValue(name);
-        mainPage.emailInputRegistrationForm.setValue(email);
-        mainPage.passwordInputRegistrationForm.setValue(password);
-        mainPage.confirmSignUpButton.click();
-        $(By.xpath("/html/body/div/div/main/div/form/button[text() = 'Войти']")).shouldBe(visible);
-
-        refresh();
-        mainPage.accountButton.click();
-        $(By.xpath("//div/main/div/h2[text()='Вход']")).shouldBe(visible);
-        mainPage.emailInputLoginForm.setValue(email);
-        mainPage.passwordInputLoginForm.setValue(password);
-        mainPage.signInButtonLoginForm.click();
+        registerPage.signUpUser(name, email, password);
+        loginPage.signInHeadingIsVisible();
+        mainPage.goToPersonalAccount();
+        loginPage.loginUser(email, password);
         mainPage.makeOrderButton.shouldBe(visible);
-
-        mainPage.accountButton.click();
-        $(By.xpath("//div/nav/p[text()='В этом разделе вы можете изменить свои персональные данные']")).shouldBe(visible);
-        mainPage.logOutButton.click();
-        $(By.xpath("//div/main/div/h2[text()='Вход']")).shouldBe(visible);
-
+        accountPage.logOutUser();
     }
 
     @After
     public void deleteTestData() {
         TestData testData = new TestData();
         testData.loginAndDeleteTestUser(email, password);
-
     }
 
-
-
-
-
 }
-*/

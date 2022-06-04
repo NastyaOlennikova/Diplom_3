@@ -1,6 +1,5 @@
 package org.example.pageobject;
 import com.codeborne.selenide.SelenideElement;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 
@@ -50,15 +49,11 @@ public class RegisterPageObject {
     }
 
     public void signUpUser(String name, String email, String password) {
-        MainPageObject mainPage;
-        LoginPageObject loginPage;
-        RegisterPageObject registerPage;
-
-        mainPage = open("https://stellarburgers.nomoreparties.site/",
+        MainPageObject mainPage = open("https://stellarburgers.nomoreparties.site/",
                 MainPageObject.class);
-        loginPage = open("https://stellarburgers.nomoreparties.site/",
+        LoginPageObject loginPage = open("https://stellarburgers.nomoreparties.site/login",
                 LoginPageObject.class);
-        registerPage = open("https://stellarburgers.nomoreparties.site/",
+        RegisterPageObject registerPage = open("https://stellarburgers.nomoreparties.site/register",
                 RegisterPageObject.class);
 
         mainPage.goToPersonalAccount();
@@ -69,6 +64,22 @@ public class RegisterPageObject {
         registerPage.setEmail(email);
         registerPage.setPassword(password);
         registerPage.confirmSignUp();
+    }
+    public void registerLoginAndGoToPersonalAccount(String name, String email, String password) {
+        LoginPageObject loginPage = open("https://stellarburgers.nomoreparties.site/login",
+                LoginPageObject.class);
+        RegisterPageObject registerPage = open("https://stellarburgers.nomoreparties.site/register",
+                RegisterPageObject.class);
+        AccountPageObject accountPage = open("https://stellarburgers.nomoreparties.site/account/profile",
+                AccountPageObject.class);
+        MainPageObject mainPage = open("https://stellarburgers.nomoreparties.site/",
+                MainPageObject.class);
+
+        registerPage.signUpUser(name, email, password);
+        loginPage.signInHeadingIsVisible();
+        loginPage.loginUser(email, password);
+        mainPage.goToPersonalAccount();
+        accountPage.infoMessageIsShown();
     }
 
 }
