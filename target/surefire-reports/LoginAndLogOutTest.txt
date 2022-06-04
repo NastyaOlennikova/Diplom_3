@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: LoginAndLogOutTest
 -------------------------------------------------------------------------------
-Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 15.685 s - in LoginAndLogOutTest
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 20.024 s - in LoginAndLogOutTest

@@ -1,3 +1,7 @@
-org/example/Credentials.class
-org/example/StellarBurgersPageObject.class
-org/example/TestData.class
+org/example/pageobject/ForgotPasswordPageObject.class
+org/example/testdata/Credentials.class
+org/example/pageobject/RegisterPageObject.class
+org/example/pageobject/LoginPageObject.class
+org/example/pageobject/AccountPageObject.class
+org/example/pageobject/MainPageObject.class
+org/example/testdata/TestData.class
