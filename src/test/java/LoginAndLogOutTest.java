@@ -13,11 +13,15 @@ import static com.codeborne.selenide.Selenide.*;
 
 public class LoginAndLogOutTest {
 
-    MainPageObject mainPage;
-    LoginPageObject loginPage;
-    RegisterPageObject registerPage;
-    ForgotPasswordPageObject forgotPasswordPage;
-    AccountPageObject accountPage;
+    MainPageObject mainPage = open("https://stellarburgers.nomoreparties.site/",
+              MainPageObject.class);
+    LoginPageObject loginPage = open("https://stellarburgers.nomoreparties.site/login",
+              LoginPageObject.class);
+    RegisterPageObject  registerPage = open("https://stellarburgers.nomoreparties.site/register",
+              RegisterPageObject.class);
+    ForgotPasswordPageObject  forgotPasswordPage = open("https://stellarburgers.nomoreparties.site/forgot-password",
+              ForgotPasswordPageObject.class);
+    AccountPageObject accountPage = open("https://stellarburgers.nomoreparties.site/account/profile", AccountPageObject.class);
     String name;
     String email;
     String password;
@@ -30,15 +34,7 @@ public class LoginAndLogOutTest {
                     driver = new ChromeDriver();
                     setWebDriver(driver);*/
         Configuration.startMaximized = true;//опционально
-        mainPage = open("https://stellarburgers.nomoreparties.site/",
-                MainPageObject.class);
-        loginPage = open("https://stellarburgers.nomoreparties.site/login",
-                LoginPageObject.class);
-        registerPage = open("https://stellarburgers.nomoreparties.site/register",
-                RegisterPageObject.class);
-        forgotPasswordPage = open("https://stellarburgers.nomoreparties.site/forgot-password",
-                ForgotPasswordPageObject.class);
-        accountPage = open("https://stellarburgers.nomoreparties.site/account/profile", AccountPageObject.class);
+
         name = RandomStringUtils.randomAlphabetic(10);
         email = RandomStringUtils.randomAlphabetic(5) + "@" + RandomStringUtils.randomAlphabetic(5) + ".ru";
         password = RandomStringUtils.randomAlphabetic(6);

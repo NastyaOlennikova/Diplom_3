@@ -11,11 +11,12 @@ import org.junit.Test;
 import static com.codeborne.selenide.Selenide.open;
 
 public class SiteNavigationTest {
-    MainPageObject mainPage;
+    MainPageObject mainPage = open("https://stellarburgers.nomoreparties.site/",
+            MainPageObject.class);
     LoginPageObject loginPage = open("https://stellarburgers.nomoreparties.site/login",
-                                   LoginPageObject.class);
-    RegisterPageObject registerPage = open("https://stellarburgers.nomoreparties.site/register",
-                                         RegisterPageObject.class);
+            LoginPageObject.class);
+    RegisterPageObject  registerPage = open("https://stellarburgers.nomoreparties.site/register",
+            RegisterPageObject.class);
     String name;
     String email;
     String password;
@@ -28,8 +29,6 @@ public class SiteNavigationTest {
                     driver = new ChromeDriver();
                     setWebDriver(driver);*/
         Configuration.startMaximized = true;//опционально
-        mainPage = open("https://stellarburgers.nomoreparties.site/",
-                MainPageObject.class);
         name = RandomStringUtils.randomAlphabetic(10);
         email = RandomStringUtils.randomAlphabetic(5) + "@" + RandomStringUtils.randomAlphabetic(5) + ".ru";
         password = RandomStringUtils.randomAlphabetic(6);
@@ -68,6 +67,7 @@ public class SiteNavigationTest {
     @Test
     @DisplayName("Go to bun section")
     public void goToBunsSection() {
+        mainPage.refreshMainPage();
         mainPage.goToSaucesSection();
         mainPage.saucesHeadingIsVisible();
         mainPage.goToBunsSection();
@@ -76,12 +76,14 @@ public class SiteNavigationTest {
     @Test
     @DisplayName("Go to sauces section")
     public void goToSaucesSection() {
+        mainPage.refreshMainPage();
         mainPage.goToSaucesSection();
         mainPage.saucesHeadingIsVisible();
     }
     @Test
     @DisplayName("Go to filling section")
     public void goToFillingsSection() {
+        mainPage.refreshMainPage();
         mainPage.goToFillingsSection();
         mainPage.fillingsHeadingIsVisible();
     }
